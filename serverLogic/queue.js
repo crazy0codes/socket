@@ -18,7 +18,7 @@ class Queue {
                 offer.disconnected || answer.disconnected ||
                 offer.inCall || answer.inCall
             ) {
-                continue; // skip these and try the next pair
+                continue;
             }
 
             offer.inCall = true;

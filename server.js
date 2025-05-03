@@ -25,6 +25,7 @@ let waitingClients = Queue;
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
     socket.inCall = false;
+    socket.disconnected = false;
 
     socket.on('start-call', () => {
         if (waitingClients.size() < 1) {
@@ -68,13 +69,19 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
-
         socket.disconnected = true;
 
         if (socket.otherPeer) {
-            socket.otherPeer.emit('call-ended');
-            socket.otherPeer.otherPeer = null;
-            socket.otherPeer.inCall = false;
+            const peer = socket.otherPeer;
+
+            peer.emit('call-ended');
+            peer.otherPeer = null;
+            peer.inCall = false;
+
+            // ✅ Requeue the peer if still connected
+            if (!peer.disconnected) {
+                waitingClients.push(peer);
+            }
         }
 
         socket.otherPeer = null;
