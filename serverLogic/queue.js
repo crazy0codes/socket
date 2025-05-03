@@ -4,31 +4,41 @@ class Queue {
     }
 
     push(client) {
-        if (!this.queue.includes(client)) {
+        if (!this.queue.includes(client) && !client.inCall && !client.disconnected) {
             this.queue.push(client);
         }
     }
 
     pairClients() {
-        if (this.queue.length < 2) {
-            console.log("Not enough clients in the queue");
-            return null;
+        while (this.queue.length >= 2) {
+            const offer = this.queue.shift();
+            const answer = this.queue.shift();
+
+            if (
+                offer.disconnected || answer.disconnected ||
+                offer.inCall || answer.inCall
+            ) {
+                continue; // skip these and try the next pair
+            }
+
+            offer.inCall = true;
+            answer.inCall = true;
+
+            return { offer, answer };
         }
-        const offer = this.queue.shift();
-        const answer = this.queue.shift();
-        return { offer, answer };
+        return null;
     }
 
     removeClient(client) {
         this.queue = this.queue.filter(c => c !== client);
     }
 
-    print() {
-        this.queue.forEach(candidate => console.log(candidate));
-    }
-
     size() {
         return this.queue.length;
+    }
+
+    print() {
+        this.queue.forEach(c => console.log(c.id));
     }
 }
 
