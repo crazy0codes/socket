@@ -7,6 +7,13 @@ const Queue = require("./serverLogic/queue.js");
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+const cors = require('cors');
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 
 let waitingClients = Queue;
 
