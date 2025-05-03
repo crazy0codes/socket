@@ -1,21 +1,26 @@
 class Queue {
     constructor() {
         this.queue = [];
-        this.offerCandidate = null;
-        this.answerCandidate = null;
     }
 
     push(client) {
-        this.queue.push(client);
+        if (!this.queue.includes(client)) {
+            this.queue.push(client);
+        }
     }
 
-    pop() {
+    pairClients() {
         if (this.queue.length < 2) {
             console.log("Not enough clients in the queue");
-            return;
+            return null;
         }
-        this.offerCandidate = this.queue.shift();
-        this.answerCandidate = this.queue.shift();
+        const offer = this.queue.shift();
+        const answer = this.queue.shift();
+        return { offer, answer };
+    }
+
+    removeClient(client) {
+        this.queue = this.queue.filter(c => c !== client);
     }
 
     print() {
