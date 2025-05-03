@@ -20,7 +20,7 @@ async function startCall() {
 
         socket.emit('start-call');
     } catch (error) {
-        console.error('Error accessing media devices:', error);
+        alert("give permission to video and audio to start call")
     }
 }
 

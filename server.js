@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const path = require("node:path")
+const path = require("node:path");
 
 const app = express();
 const server = http.createServer(app);
@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
             waitingClients.push(socket);
             socket.emit('waiting');
         } else {
-            const peer = waitingClients.pop();
+            const peer = waitingClients.shift();
             socket.emit('ready-to-call', { type: 'offer' });
             peer.emit('ready-to-call', { type: 'answer' });
             
